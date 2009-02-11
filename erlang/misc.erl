@@ -83,11 +83,67 @@ element(4, X) =:= hd(L)
 % of the third element of T is greater than 5. The second line means that 
 % element 4 of the tuple X is identical to the head of the list L. 
 
+% RECORDS
+-record(todo, {status=reminder,who=joe,text}).
+X = #todo{}.
+X1 = #todo{status=urgent, text="Fix errata in book"}.
+X2 = X1#todo{status=done}.
 
+% Extracting values
+#todo{who=W, text=Txt} = X2. % W == joe, Txt == "Fix errata in book"
+X2#todo.text. % returns "Fix errata in book"
 
+% In functions
+clear_status(#todo{status=S, who=W} = R) -> 
+	%% Inside this function S and W are bound to the field 
+	%% values in the record 
+	%% 
+	%% R is the *entire* record 
+	R#todo{status=finished} 
+	%% ... 
 
+% CASE
+case Expression of 
+	Pattern1 [when Guard1] -> Expr_seq1; 
+	Pattern2 [when Guard2] -> Expr_seq2; 
+	... 
+end 
 
+filter(P, [H|T]) -> 
+	case P(H) of 
+		true -> [H|filter(P, T)]; 
+		false -> filter(P, T) 
+	end; 
+filter(P, []) -> [].
 
+% IF
+if 
+	Guard1 -> 
+		Expr_seq1; 
+	Guard2 -> 
+		Expr_seq2; 
+	... 
+end 
 
+% Building Lists in Natural Order 
+% 1. Always add elements to a list head. 
+% 2. Taking the elements from the head of an InputList and adding 
+% them head ﬁrst to an OutputList results in the OutputList having 
+% the reverse order of the InputList. 
+% 3. If the order matters, then call lists:reverse/1, which is highly optimized. 
+% 4. Avoid going against these recommendations.
 
+% If you ever see code like this: 
+% 	List ++ [H] 
+% it should set alar m bells of f in your brain—this is very inefﬁcient and 
+% acceptable only if List is very short. 
 
+% ACCUMULATORS
+odds_and_evens_acc(L) -> odds_and_evens_acc(L, [], []). 
+
+odds_and_evens_acc([H|T], Odds, Evens) -> 
+	case (H rem 2) of 
+		1 -> odds_and_evens_acc(T, [H|Odds], Evens); 
+		0 -> odds_and_evens_acc(T, Odds, [H|Evens]) 
+	end; 
+odds_and_evens_acc([], Odds, Evens) -> {Odds, Evens}.
