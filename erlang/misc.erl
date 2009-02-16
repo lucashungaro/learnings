@@ -147,3 +147,63 @@ odds_and_evens_acc([H|T], Odds, Evens) ->
 		0 -> odds_and_evens_acc(T, Odds, [H|Evens]) 
 	end; 
 odds_and_evens_acc([], Odds, Evens) -> {Odds, Evens}.
+
+% EXCEPTIONS
+% try...catch
+% try...catch is like a case expression on steroids. It’s basically a case 
+% expression with catch and after blocks at the end.
+try FuncOrExpressionSequence of 
+	Pattern1 [when Guard1] -> Expressions1; 
+	Pattern2 [when Guard2] -> Expressions2; 
+	... 
+catch 
+	ExceptionType: ExPattern1 [when ExGuard1] -> ExExpressions1; 
+	ExceptionType: ExPattern2 [when ExGuard2] -> ExExpressions2; 
+	... 
+after 
+	AfterExpressions 
+end
+
+% Shortcut
+try F 
+catch 
+... 
+end 
+
+% Sample
+generate_exception(1) -> a; 
+generate_exception(2) -> throw(a); 
+generate_exception(3) -> exit(a); 
+generate_exception(4) -> {'EXIT', a}; 
+generate_exception(5) -> erlang:error(a).
+
+demo1() -> 
+	[catcher(I) || I <- [1,2,3,4,5]]. 
+
+catcher(N) -> 
+	try generate_exception(N) of 
+		Val -> {N, normal, Val} 
+	catch 
+		throw:X -> {N, caught, thrown, X}; 
+		exit:X -> {N, caught, exited, X}; 
+		error:X -> {N, caught, error, X} 
+	end.
+
+% catch
+demo2() -> [{I, (catch generate_exception(I))} || I <- [1,2,3,4,5]].
+	
+% messages
+sqrt(X) when X < 0 -> 
+	erlang:error({squareRootNegativeArgument, X}); 
+sqrt(X) -> 
+	math:sqrt(X).
+
+% stack trace
+demo3() -> 
+	try generate_exception(5) 
+	catch 
+		error:X -> {X, erlang:get_stacktrace()} 
+end.
+
+
+
