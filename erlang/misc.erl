@@ -205,5 +205,32 @@ demo3() ->
 		error:X -> {X, erlang:get_stacktrace()} 
 end.
 
+% BINARIES
+% Binaries are written and printed as sequences of integers or strings, 
+% enclosed in double less-than and greater -than brackets. For example: 
+1> <<5,10,20>>. 
+<<5,10,20>> 
+2> <<"hello">>. 
+<<"hello">> 
 
+% Bit Syntax
+% Packing
+1> Red = 2. 
+2 
+2> Green = 61. 
+61 
+3> Blue = 20. 
+20 
+4> Mem = <<Red:5, Green:6, Blue:5>>. 
+<<23,180>>
+
+% Unpacking
+5> <<R1:5, G1:6, B1:5>> = Mem. 
+<<23,180>> 
+6> R1. 
+2 
+7> G1. 
+61 
+8> B1. 
+20 
 
