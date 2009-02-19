@@ -234,3 +234,27 @@ end.
 8> B1. 
 20 
 
+% CONCURRENCY
+Pid = spawn(Fun) 
+% Creates a new concurrent process that evaluates Fun. The new 
+% process runs in parallel with the caller. spawn retur ns a Pid (short 
+% for process identiﬁer). You can use Pid to send messages to the 
+% process.
+
+Pid ! Message 
+% Sends Message to the process with identiﬁer Pid. Message sending 
+% is asynchronous. The sender does not wait but continues with 
+% what it was doing. ! is called the send operator. 
+% Pid ! M is deﬁned to be M—the message sending primitive ! retur ns 
+% the message itself. Because of this, Pid1 ! Pid2 ! ... ! M means send 
+% the message M to all the processes Pid1, Pid2, and so on. 
+
+receive 
+    Pattern1 [when Guard1] -> 
+                     Expressions1; 
+    Pattern2 [when Guard2] -> 
+                     Expressions2; 
+    ... 
+end 
+% Receives a message that has been sent to a process.
+
