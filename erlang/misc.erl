@@ -295,3 +295,25 @@ priority_receive() ->
             end 
     end.
 
+% Registered processes
+% register(AnAtom, Pid) 
+%   Register the process Pid with the name AnAtom. The registration 
+%   fails if AnAtom has already been used to register a process. 
+
+% unregister(AnAtom) 
+%   Remove any registrations associated with AnAtom. 
+%   Note: If a registered process dies it will be automatically unregis-tered. 
+
+% whereis(AnAtom) -> Pid | undeﬁned 
+%   Find out whether AnAtom is registered. Return the process identifier
+%   Pid, or retur n the atom undeﬁned if no process is associated with AnAtom.
+
+% registered() -> [AnAtom::atom()] 
+%   Retur n a list of all registered processes in the system. 
+
+Pid = spawn(fun area_server0:loop/0).
+
+register(area, Pid).
+
+area ! {rectangle, 4, 5}.
+
